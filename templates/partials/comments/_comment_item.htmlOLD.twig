@@ -1,0 +1,62 @@
+{# templates/partials/comments/_comment_item.html.twig #}
+
+<div class="comment-item mb-2 p-3 border rounded">
+
+    {# Contenu du commentaire #}
+    <p class="mb-1">{{ comment.content|nl2br }}</p>
+
+    {# Métadonnées #}
+    <small class="text-muted">
+        Par <strong>{{ comment.author.username }}</strong>
+        le {{ comment.createdAt|date('d/m/Y à H:i') }}
+        {% if comment.updatedAt %}
+            <em>(modifié)</em>
+        {% endif %}
+    </small>
+
+    {# Actions #}
+    <div class="mt-2 d-flex gap-2">
+
+        {# Signalement — uniquement pour les utilisateurs normaux #}
+        {% if is_granted('ROLE_USER') and not is_granted('ROLE_MODERATOR') %}
+            <form action="{{ path('report_comment', { id: comment.id }) }}" 
+                  method="post" 
+                  class="d-inline">
+                <input type="hidden" name="_token"
+                       value="{{ csrf_token('report_comment_' ~ comment.id) }}">
+
+                <select name="reason" class="form-select form-select-sm d-inline w-auto" required>
+                    <option value="" disabled selected>Choisir une raison</option>
+                    <option value="spam">Spam ou contenu indésirable</option>
+                    <option value="insult">Insulte ou propos haineux</option>
+                    <option value="harassment">Harcèlement</option>
+                    <option value="off_topic">Hors sujet</option>
+                    <option value="other">Autre raison</option>
+                </select>
+
+                <button type="submit" class="btn btn-sm btn-outline-warning">
+                    ⚑ Signaler un commentaire
+                </button>
+            </form>
+        {% endif %}
+
+        {# Suppression — auteur ou modérateur (via Voter) #}
+        {% if is_granted('COMMENT_DELETE', comment) %}
+            <form action="{{ path('comment_delete', {
+                id: post.id,
+                commentId: comment.id
+            }) }}" 
+                  method="post" 
+                  class="d-inline">
+                <input type="hidden" name="_token"
+                       value="{{ csrf_token('delete_comment_' ~ comment.id) }}">
+                <button type="submit" 
+                        class="btn btn-sm btn-outline-danger"
+                        onclick="return confirm('Supprimer définitivement ce commentaire ?')">
+                    🗑 Supprimer
+                </button>
+            </form>
+        {% endif %}
+
+    </div>
+</div>

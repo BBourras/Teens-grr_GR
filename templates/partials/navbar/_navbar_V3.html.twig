@@ -1,0 +1,109 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container">
+    <!-- Logo / Brand -->
+    <a class="navbar-brand fw-bold" href="{{ path('app_home') }}">Teens-GRR</a>
+
+    <!-- Toggle responsive -->
+    <button class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMain">
+      <!-- NAV PRINCIPALE -->
+      <ul class="navbar-nav me-auto">
+        <!-- Flux -->
+        <li class="nav-item">
+          <a class="nav-link nav-icon nav-link--highlight"
+            href="{{ path('post_recent') }}">
+            <i class="bi bi-rss nav-icon__icon me-1"></i>
+            Récemment
+          </a>
+        </li>
+
+        <!-- Top -->
+        <li class="nav-item">
+          <a class="nav-link nav-icon nav-link--highlight"
+            href="{{ path('post_trending') }}">
+            <i class="bi bi-trophy nav-icon__icon me-1"></i>
+            Top du moment
+          </a>
+        </li>
+
+        <!-- Légendes -->
+        <li class="nav-item">
+          <a class="nav-link nav-icon nav-link--highlight"
+            href="{{ path('post_legend') }}">
+            <i class="bi bi-bank nav-icon__icon me-1"></i>
+            Légendes
+          </a>
+        </li>
+
+        <!-- Modération (si modérateur) -->
+        {% if is_granted('ROLE_MODERATOR') %}
+          <li class="nav-item">
+            <a class="nav-link text-warning"
+              href="{{ path('moderation_dashboard') }}">
+              <i class="bi bi-shield-check nav-icon__icon me-1"></i>
+              Modération
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+
+      <!-- MENU UTILISATEUR -->
+      <ul class="navbar-nav">
+        {% if app.user %}
+          <!-- Mon Compte -->
+          <li class="nav-item">
+            <a class="nav-link nav-icon nav-link--user"
+              href="{{ path('user_dashboard') }}">
+              <i class="bi bi-person-circle nav-icon__icon me-1"></i>
+              Mon compte
+            </a>
+          </li>
+
+          <!-- Nouveau post -->
+          {% if is_granted('ROLE_USER') %}
+            <li class="nav-item">
+              <a class="nav-link nav-icon nav-link--user"
+                href="{{ path('post_create') }}">
+                <i class="bi bi-plus-circle nav-icon__icon me-1"></i>
+                Nouveau post
+              </a>
+            </li>
+          {% endif %}
+
+          <!-- Déconnexion -->
+          <li class="nav-item">
+            <a class="nav-link nav-icon nav-link--user logout-link"
+              href="{{ path('app_logout') }}">
+              <i class="bi bi-box-arrow-right nav-icon__icon me-1"></i>
+              Déconnexion
+            </a>
+          </li>
+        {% else %}
+          <!-- Connexion -->
+          <li class="nav-item">
+            <a class="nav-link nav-icon nav-link--user login-link"
+              href="{{ path('app_login') }}">
+              <i class="bi bi-box-arrow-in-right nav-icon__icon me-1"></i>
+              Connexion
+            </a>
+          </li>
+
+          <!-- Inscription -->
+          <li class="nav-item">
+            <a class="nav-link nav-icon nav-link--user"
+              href="{{ path('app_register') }}">
+              <i class="bi bi-person-plus nav-icon__icon me-1"></i>
+              Inscription
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

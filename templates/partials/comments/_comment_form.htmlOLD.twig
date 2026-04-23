@@ -1,0 +1,42 @@
+{#
+    templates/partials/comments/_comment_form.html.twig
+    -------------------------------------------------------
+    Formulaire de création d'un commentaire.
+    Utilisé dans post/show.html.twig.
+
+    Variables attendues :
+        - form       : FormView du CommentFormType
+        - post       : entité Post (pour l'action de la route)
+        - button_label (optionnel) : libellé du bouton, défaut 'Publier'
+
+    Usage :
+        {{ include('partials/comments/_comment_form.html.twig', {
+            form: commentForm,
+            post: post,
+            button_label: 'Répondre'
+        }) }}
+#}
+
+{{ form_start(form, {
+    action: path('comment_create', { id: post.id }),
+    method: 'POST',
+    attr: { novalidate: 'novalidate' }
+}) }}
+
+    <div class="d-flex align-items-start gap-2">
+        <div class="flex-grow-1">
+            {{ form_widget(form.content, {
+                attr: {
+                    placeholder: 'Ecrire mon commentaire...',
+                    class: 'form-control'
+                }
+            }) }}
+            {{ form_errors(form.content) }}
+        </div>
+
+        <button type="submit" class="btn btn-warning  btn-sm ms-auto">
+            {{ button_label|default('Publier') }}
+        </button>
+    </div>
+
+{{ form_end(form) }}
